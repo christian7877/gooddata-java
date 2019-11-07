@@ -13,6 +13,7 @@ import com.gooddata.sdk.model.project.model.DiffRequest;
 import com.gooddata.sdk.model.project.model.MaqlDdl;
 import com.gooddata.sdk.model.project.model.MaqlDdlLinks;
 import com.gooddata.sdk.model.project.model.ModelDiff;
+import com.gooddata.sdk.model.project.model.ProjectModel;
 import com.gooddata.sdk.service.*;
 import com.gooddata.sdk.service.dataset.DatasetService;
 import org.springframework.http.client.ClientHttpResponse;
@@ -60,7 +61,11 @@ public class ModelService extends AbstractService {
     public FutureResult<ModelDiff> getProjectModelDiff(Project project, String targetModel) {
         notNull(project, "project");
         notNull(targetModel, "targetModel");
-        return getProjectModelDiff(project, new DiffRequest(targetModel));
+        try {
+            return getProjectModelDiff(project, new DiffRequest(mapper.readValue(targetModel, ProjectModel.class)));
+        } catch (IOException e) {
+            throw new ModelException("Given model is not correct ProjectModel representation");
+        }
     }
 
     public FutureResult<ModelDiff> getProjectModelDiff(Project project, Reader targetModel) {
