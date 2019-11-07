@@ -27,14 +27,13 @@ public class DiffRequest {
 
     public static final String URI = "/gdc/projects/{project-id}/model/diff";
 
-    @JsonRawValue
     @JsonProperty("targetModel")
-    private final String targetModel;
+    private final ProjectModel targetModel;
 
     /**
      * @param targetModel desired target state of project model
      */
-    public DiffRequest(String targetModel) {
+    public DiffRequest(ProjectModel targetModel) {
         this.targetModel = notNull(targetModel, "targetModel");
     }
 
@@ -42,7 +41,7 @@ public class DiffRequest {
      * Returns desired target state of project model
      * @return desired target state of project model
      */
-    public String getTargetModel() {
+    public ProjectModel getTargetModel() {
         return targetModel;
     }
 
