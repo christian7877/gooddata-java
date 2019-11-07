@@ -58,6 +58,12 @@ public class ModelService extends AbstractService {
         }
     }
 
+    public FutureResult<ModelDiff> getProjectModelDiff(Project project, ProjectModel targetModel) {
+        notNull(project, "project");
+        notNull(targetModel, "targetModel");
+        return getProjectModelDiff(project, new DiffRequest(targetModel));
+    }
+
     public FutureResult<ModelDiff> getProjectModelDiff(Project project, String targetModel) {
         notNull(project, "project");
         notNull(targetModel, "targetModel");

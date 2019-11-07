@@ -5,6 +5,8 @@
  */
 package com.gooddata.sdk.service.project.model;
 
+import com.gooddata.sdk.model.project.model.DiffRequest;
+import com.gooddata.sdk.model.project.model.ProjectModel;
 import com.gooddata.sdk.service.AbstractGoodDataIT;
 import com.gooddata.sdk.model.gdc.AsyncTask;
 import com.gooddata.sdk.model.gdc.TaskStatus;
@@ -14,11 +16,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static com.gooddata.util.ResourceUtils.OBJECT_MAPPER;
 import static com.gooddata.util.ResourceUtils.readFromResource;
 import static com.gooddata.util.ResourceUtils.readObjectFromResource;
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static net.jadler.Jadler.onRequest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -61,7 +65,7 @@ public class ModelServiceIT extends AbstractGoodDataIT {
                 .withBody(readFromResource("/model/modelDiff.json"))
         ;
 
-        final ModelDiff diff = gd.getModelService().getProjectModelDiff(project, "xxx").get();
+        final ModelDiff diff = gd.getModelService().getProjectModelDiff(project, new ProjectModel(emptyList(), emptyList())).get();
 
         assertThat(diff, is(notNullValue()));
         assertThat(diff.getUpdateMaql().get(0), is("CREATE FOLDER {ffld.employee} VISUAL(TITLE \"Employee\") TYPE FACT;\nCREATE FACT {fact.employee.age} VISUAL(TITLE \"Employee Age\", FOLDER {ffld.employee}) AS {f_employee.f_age};\nALTER DATASET {dataset.employee} ADD {fact.employee.age};\nSYNCHRONIZE {dataset.employee} PRESERVE DATA;"));
@@ -82,7 +86,7 @@ public class ModelServiceIT extends AbstractGoodDataIT {
                 .withStatus(400)
         ;
 
-        gd.getModelService().getProjectModelDiff(project, "xxx").get();
+        gd.getModelService().getProjectModelDiff(project, new ProjectModel(emptyList(), emptyList())).get();
     }
 
     @Test
